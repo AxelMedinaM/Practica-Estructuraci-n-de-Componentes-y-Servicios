@@ -1,0 +1,8 @@
+[
+  { "id": 1, "etiqueta": "Sensor Temp", "valor": 24.5, "estado": "Activo" },
+  { "id": 2, "etiqueta": "Sensor Humedad", "valor": 60.2, "estado": "Activo" },
+  { "id": 3, "etiqueta": "Sensor Presión", "valor": 1012.1, "estado": "Inactivo" },
+  { "id": 4, "etiqueta": "Sensor Luz", "valor": 450.0, "estado": "Activo" },
+  { "id": 5, "etiqueta": "Sensor Calidad Aire", "valor": 412.0, "estado": "Activo" },
+  { "id": 6, "etiqueta": "Sensor Ruido", "valor": 48.6, "estado": "Inactivo" }
+]
