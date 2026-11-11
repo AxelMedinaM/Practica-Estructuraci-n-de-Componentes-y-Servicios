@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import PanelAnalitico from './components/PanelAnalitico';
 import Navbar from './components/Navbar';
 import { TarjetaMetrica } from './components/TarjetaMetrica';
 import { TablaDatos } from './components/TablaDatos';
@@ -60,6 +61,10 @@ function App() {
           </div>
         ) : (
           <>
+            {/* AQUÍ AGREGAMOS EL COMPONENTE DE LA PRÁCTICA 3 */}
+            <section style={{ marginBottom: '28px' }}>
+              <PanelAnalitico />
+            </section>
             {/* Renderiza al menos tres instancias de TarjetaMetrica con diferentes métricas clave */}
             <section style={{ marginBottom: '28px' }}>
               <h3 style={{ fontSize: '1.1rem', color: '#334155', marginBottom: '12px' }}>

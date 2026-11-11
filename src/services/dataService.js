@@ -1,4 +1,18 @@
 import datasetLocal from '../data/dataset.json';
+import apiClient from './apiClient';
+
+export const obtenerSerieDeTiempo = async () => {
+  // Realizamos la petición GET a la API externa enviando los parámetros necesarios
+  const response = await apiClient.get('/forecast', {
+    params: {
+      latitude: 19.2433, // Coordenadas de Cocotitlán precargadas para la prueba
+      longitude: -98.8653,
+      current_weather: true
+    }
+  });
+  // Extraemos la carga útil (payload) y retornamos los datos limpios al componente
+  return response.data.current_weather; 
+};
 
 // Simula una petición HTTP devolviendo una Promesa con el JSON local
 export const obtenerDatosVisualizacion = async () => {
