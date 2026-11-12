@@ -1,22 +1,37 @@
 import { useState, useEffect } from 'react';
+import DashboardLayout from './components/DashboardLayout';
+import PanelFiltros from './components/PanelFiltros';
 import PanelAnalitico from './components/PanelAnalitico';
-import Navbar from './components/Navbar';
 import { TarjetaMetrica } from './components/TarjetaMetrica';
 import { TablaDatos } from './components/TablaDatos';
 import { obtenerDatosVisualizacion, procesarDatos } from './services/dataService';
 
 function App() {
-  // Utiliza los hooks useState para almacenar el dataset y métricas
+  const [filtros, setFiltros] = useState({ categoria: 'todas', fecha: '' });
+
   const [datos, setDatos] = useState([]);
   const [metricas, setMetricas] = useState({ total: 0, promedio: '0.00', activos: 0, inactivos: 0 });
   const [cargando, setCargando] = useState(true);
 
-  // Utiliza useEffect para ejecutar obtenerDatosVisualizacion() al montar la aplicación
   useEffect(() => {
-    const cargarDatos = async () => {
+    const cargarDatosFiltrados = async () => {
+      setCargando(true);
       try {
         const datosCrudos = await obtenerDatosVisualizacion();
-        const datosProcesados = procesarDatos(datosCrudos);
+        
+        let datosFiltrados = datosCrudos;
+        
+        // Filtrado por categoría
+        if (filtros.categoria !== 'todas') {
+          datosFiltrados = datosFiltrados.filter(item => item.categoria === filtros.categoria);
+        }
+        
+        // Filtrado por fecha exacta
+        if (filtros.fecha) {
+          datosFiltrados = datosFiltrados.filter(item => item.fecha === filtros.fecha);
+        }
+
+        const datosProcesados = procesarDatos(datosFiltrados);
         
         setDatos(datosProcesados.datosTabla);
         setMetricas(datosProcesados.metricas);
@@ -27,25 +42,19 @@ function App() {
       }
     };
 
-    cargarDatos();
-  }, []);
+    cargarDatosFiltrados();
+  }, [filtros]);
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#f8fafc',
-      padding: '24px 16px',
-      boxSizing: 'border-box'
-    }}>
-      <div style={{ maxWidth: '1000px', margin: '0 auto' }}>
-        <Navbar />
-
-        <header style={{ marginBottom: '24px' }}>
+    <DashboardLayout panelFiltros={<PanelFiltros filtros={filtros} setFiltros={setFiltros} />}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', gridColumn: '1 / -1' }}>
+        
+        <header style={{ marginBottom: '12px' }}>
           <h2 style={{ fontSize: '1.5rem', color: '#0f172a', margin: '0 0 6px 0' }}>
-            Práctica 2: Estructuración de Componentes y Servicios
+            Práctica 4: Construcción de un Dashboard Interactivo
           </h2>
           <p style={{ margin: 0, color: '#64748b', fontSize: '0.95rem' }}>
-            Visualización y gestión modular de datos de sensores.
+            Visualización y gestión modular de datos con filtros globales.
           </p>
         </header>
 
@@ -57,15 +66,14 @@ function App() {
             padding: '48px',
             color: '#64748b'
           }}>
-            <p style={{ fontSize: '1.1rem' }}>Cargando datos del servicio...</p>
+            <p style={{ fontSize: '1.1rem' }}>Recalculando datos...</p>
           </div>
         ) : (
           <>
-            {/* AQUÍ AGREGAMOS EL COMPONENTE DE LA PRÁCTICA 3 */}
             <section style={{ marginBottom: '28px' }}>
               <PanelAnalitico />
             </section>
-            {/* Renderiza al menos tres instancias de TarjetaMetrica con diferentes métricas clave */}
+            
             <section style={{ marginBottom: '28px' }}>
               <h3 style={{ fontSize: '1.1rem', color: '#334155', marginBottom: '12px' }}>
                 Métricas Clave
@@ -102,7 +110,6 @@ function App() {
               </div>
             </section>
 
-            {/* Renderiza una instancia de TablaDatos inyectando la información del estado */}
             <section>
               <h3 style={{ fontSize: '1.1rem', color: '#334155', marginBottom: '12px' }}>
                 Registro de Datos
@@ -112,7 +119,7 @@ function App() {
           </>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 }
 

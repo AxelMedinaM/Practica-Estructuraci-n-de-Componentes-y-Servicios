@@ -1,8 +1,8 @@
 [
-  { "id": 1, "etiqueta": "Sensor Temp", "valor": 24.5, "estado": "Activo" },
-  { "id": 2, "etiqueta": "Sensor Humedad", "valor": 60.2, "estado": "Activo" },
-  { "id": 3, "etiqueta": "Sensor Presión", "valor": 1012.1, "estado": "Inactivo" },
-  { "id": 4, "etiqueta": "Sensor Luz", "valor": 450.0, "estado": "Activo" },
-  { "id": 5, "etiqueta": "Sensor Calidad Aire", "valor": 412.0, "estado": "Activo" },
-  { "id": 6, "etiqueta": "Sensor Ruido", "valor": 48.6, "estado": "Inactivo" }
+  { "id": 1, "etiqueta": "Sensor Temp", "valor": 24.5, "estado": "Activo", "categoria": "temperatura", "fecha": "2026-11-10" },
+  { "id": 2, "etiqueta": "Sensor Humedad", "valor": 60.2, "estado": "Activo", "categoria": "humedad", "fecha": "2026-11-10" },
+  { "id": 3, "etiqueta": "Sensor Presión", "valor": 1012.1, "estado": "Inactivo", "categoria": "presion", "fecha": "2026-11-11" },
+  { "id": 4, "etiqueta": "Sensor Luz", "valor": 450.0, "estado": "Activo", "categoria": "luz", "fecha": "2026-11-11" },
+  { "id": 5, "etiqueta": "Sensor Calidad Aire", "valor": 412.0, "estado": "Activo", "categoria": "aire", "fecha": "2026-11-12" },
+  { "id": 6, "etiqueta": "Sensor Ruido", "valor": 48.6, "estado": "Inactivo", "categoria": "ruido", "fecha": "2026-11-12" }
 ]
