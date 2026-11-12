@@ -1,29 +1,42 @@
-export const TarjetaMetrica = ({ titulo, valor, color = '#2563eb', subtitulo }) => {
+import React from 'react';
+
+export const TarjetaMetrica = ({ titulo, valor, color, subtitulo }) => {
   return (
     <div style={{
-      flex: '1 1 200px',
-      backgroundColor: '#ffffff',
-      border: '1px solid #e2e8f0',
+      backgroundColor: 'rgba(255, 255, 255, 0.05)', /* Difuminado transparente */
       borderRadius: '12px',
-      padding: '20px',
-      margin: '8px',
-      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.05)',
+      padding: '24px 16px',
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'center',
       alignItems: 'center',
-      minWidth: '180px'
+      justifyContent: 'center',
+      border: '1px solid rgba(255, 255, 255, 0.05)', /* Borde muy sutil */
+      height: '100%',
+      boxSizing: 'border-box'
     }}>
-      <h3 style={{ margin: '0 0 8px 0', fontSize: '0.875rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+      <h4 style={{ 
+        margin: '0 0 12px 0', 
+        fontSize: '0.85rem', 
+        color: '#8f9bb3', /* Gris claro azulado para el título */
+        textTransform: 'uppercase', 
+        letterSpacing: '1px',
+        textAlign: 'center'
+      }}>
         {titulo}
-      </h3>
-      <p style={{ fontSize: '2rem', fontWeight: '700', margin: 0, color: color }}>
+      </h4>
+      
+      <span style={{ 
+        fontSize: '2.5rem', 
+        fontWeight: 'bold', 
+        color: color /* Aquí toma el color que le pasamos desde App.jsx */
+      }}>
         {valor}
-      </p>
+      </span>
+      
       {subtitulo && (
-        <span style={{ fontSize: '0.8rem', color: '#94a3b8', marginTop: '6px' }}>
+        <p style={{ margin: '12px 0 0 0', fontSize: '0.8rem', color: '#64748b', textAlign: 'center' }}>
           {subtitulo}
-        </span>
+        </p>
       )}
     </div>
   );

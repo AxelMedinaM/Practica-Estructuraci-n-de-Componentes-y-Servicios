@@ -8,7 +8,6 @@ import { obtenerDatosVisualizacion, procesarDatos } from './services/dataService
 
 function App() {
   const [filtros, setFiltros] = useState({ categoria: 'todas', fecha: '' });
-
   const [datos, setDatos] = useState([]);
   const [metricas, setMetricas] = useState({ total: 0, promedio: '0.00', activos: 0, inactivos: 0 });
   const [cargando, setCargando] = useState(true);
@@ -18,107 +17,85 @@ function App() {
       setCargando(true);
       try {
         const datosCrudos = await obtenerDatosVisualizacion();
-        
         let datosFiltrados = datosCrudos;
         
-        // Filtrado por categoría
         if (filtros.categoria !== 'todas') {
           datosFiltrados = datosFiltrados.filter(item => item.categoria === filtros.categoria);
         }
-        
-        // Filtrado por fecha exacta
         if (filtros.fecha) {
           datosFiltrados = datosFiltrados.filter(item => item.fecha === filtros.fecha);
         }
 
         const datosProcesados = procesarDatos(datosFiltrados);
-        
         setDatos(datosProcesados.datosTabla);
         setMetricas(datosProcesados.metricas);
       } catch (error) {
-        console.error('Error al cargar los datos:', error);
+        console.error('Error al cargar:', error);
       } finally {
         setCargando(false);
       }
     };
-
     cargarDatosFiltrados();
   }, [filtros]);
 
+  // Estilo base para las tarjetas/contenedores tipo Widget oscuro
+  const widgetStyle = {
+    backgroundColor: '#252a40',
+    borderRadius: '16px',
+    padding: '24px',
+    boxShadow: '0 10px 20px -5px rgba(0, 0, 0, 0.3)',
+    color: '#ffffff'
+  };
+
   return (
     <DashboardLayout panelFiltros={<PanelFiltros filtros={filtros} setFiltros={setFiltros} />}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', gridColumn: '1 / -1' }}>
-        
-        <header style={{ marginBottom: '12px' }}>
-          <h2 style={{ fontSize: '1.5rem', color: '#0f172a', margin: '0 0 6px 0' }}>
-            Práctica 4: Construcción de un Dashboard Interactivo
-          </h2>
-          <p style={{ margin: 0, color: '#64748b', fontSize: '0.95rem' }}>
-            Visualización y gestión modular de datos con filtros globales.
-          </p>
-        </header>
+      {cargando ? (
+        <div style={{ display: 'flex', justifyContent: 'center', padding: '60px', color: '#8f9bb3' }}>
+          <p style={{ fontSize: '1.1rem', letterSpacing: '1px' }}>Actualizando métricas...</p>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
+          
+          {/* Fila superior: Tarjetas de Métricas */}
+          <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '20px' }}>
+            <div style={widgetStyle}>
+              <TarjetaMetrica titulo="Total Sensores" valor={metricas.total} color="#3b82f6" />
+            </div>
+            <div style={widgetStyle}>
+              <TarjetaMetrica titulo="Activos" valor={metricas.activos} color="#10b981" />
+            </div>
+            <div style={widgetStyle}>
+              <TarjetaMetrica titulo="Inactivos" valor={metricas.inactivos} color="#ef4444" />
+            </div>
+            <div style={{...widgetStyle, backgroundColor: '#3b82f6'}}>
+              {/* Tarjeta destacada con fondo azul vibrante */}
+              <TarjetaMetrica titulo="Promedio" valor={metricas.promedio} color="#ffffff" />
+            </div>
+          </section>
 
-        {cargando ? (
-          <div style={{
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: '48px',
-            color: '#64748b'
-          }}>
-            <p style={{ fontSize: '1.1rem' }}>Recalculando datos...</p>
-          </div>
-        ) : (
-          <>
-            <section style={{ marginBottom: '28px' }}>
+          {/* Fila inferior: 2 Columnas (Gráficos y Tabla de detalles) */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '24px' }}>
+            
+            <section style={widgetStyle}>
+              <h3 style={{ margin: '0 0 20px 0', fontSize: '0.85rem', color: '#8f9bb3', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                Datos Climáticos (API)
+              </h3>
               <PanelAnalitico />
             </section>
-            
-            <section style={{ marginBottom: '28px' }}>
-              <h3 style={{ fontSize: '1.1rem', color: '#334155', marginBottom: '12px' }}>
-                Métricas Clave
+
+            <section style={{...widgetStyle, overflow: 'hidden'}}>
+              <h3 style={{ margin: '0 0 20px 0', fontSize: '0.85rem', color: '#8f9bb3', textTransform: 'uppercase', letterSpacing: '1px' }}>
+                Registro de Sensores
               </h3>
-              <div style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                margin: '-8px'
-              }}>
-                <TarjetaMetrica
-                  titulo="Total Sensores"
-                  valor={metricas.total}
-                  color="#2563eb"
-                  subtitulo="Dispositivos registrados"
-                />
-                <TarjetaMetrica
-                  titulo="Sensores Activos"
-                  valor={metricas.activos}
-                  color="#16a34a"
-                  subtitulo="En funcionamiento"
-                />
-                <TarjetaMetrica
-                  titulo="Sensores Inactivos"
-                  valor={metricas.inactivos}
-                  color="#dc2626"
-                  subtitulo="Fuera de línea"
-                />
-                <TarjetaMetrica
-                  titulo="Promedio General"
-                  valor={metricas.promedio}
-                  color="#7c3aed"
-                  subtitulo="Valor numérico promedio"
-                />
+              {/* La tabla se adapta al contenedor */}
+              <div style={{ overflowX: 'auto' }}>
+                <TablaDatos dataset={datos} />
               </div>
             </section>
 
-            <section>
-              <h3 style={{ fontSize: '1.1rem', color: '#334155', marginBottom: '12px' }}>
-                Registro de Datos
-              </h3>
-              <TablaDatos dataset={datos} />
-            </section>
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
     </DashboardLayout>
   );
 }
