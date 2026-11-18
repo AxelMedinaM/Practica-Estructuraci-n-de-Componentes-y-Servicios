@@ -2,28 +2,25 @@ import datasetLocal from '../data/dataset.json';
 import apiClient from './apiClient';
 
 export const obtenerSerieDeTiempo = async () => {
-  // Realizamos la petición GET a la API externa enviando los parámetros necesarios
   const response = await apiClient.get('/forecast', {
     params: {
-      latitude: 19.2433, // Coordenadas de Cocotitlán precargadas para la prueba
+      latitude: 19.2433, 
       longitude: -98.8653,
       current_weather: true
     }
   });
-  // Extraemos la carga útil (payload) y retornamos los datos limpios al componente
+
   return response.data.current_weather; 
 };
 
-// Simula una petición HTTP devolviendo una Promesa con el JSON local
 export const obtenerDatosVisualizacion = async () => {
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve(datasetLocal);
-    }, 500); // Simulamos 500ms de retraso de red
+    }, 500); 
   });
 };
 
-// Filtra o formatea la información (ej. extraer etiquetas y valores numéricos) preparándola para el renderizado
 export const procesarDatos = (datos = []) => {
   if (!Array.isArray(datos) || datos.length === 0) {
     return {
@@ -39,11 +36,9 @@ export const procesarDatos = (datos = []) => {
     };
   }
 
-  // Extraemos etiquetas y valores numéricos
   const etiquetas = datos.map((item) => item.etiqueta);
   const valores = datos.map((item) => Number(item.valor) || 0);
 
-  // Formateamos los datos para la tabla
   const datosTabla = datos.map((item) => ({
     id: item.id,
     etiqueta: item.etiqueta,
@@ -51,10 +46,8 @@ export const procesarDatos = (datos = []) => {
     estado: item.estado
   }));
 
-  // Filtramos sensores activos
   const sensoresActivos = datosTabla.filter((item) => item.estado === 'Activo');
 
-  // Calculamos métricas para las tarjetas de resumen
   const total = datosTabla.length;
   const activos = sensoresActivos.length;
   const inactivos = total - activos;
@@ -71,5 +64,22 @@ export const procesarDatos = (datos = []) => {
       activos,
       inactivos
     }
+  };
+};
+
+export const formatearParaGrafico = (datosCrudos = []) => {
+  if (!Array.isArray(datosCrudos) || datosCrudos.length === 0) {
+    return {
+      labels: [],
+      values: []
+    };
+  }
+
+  const labels = datosCrudos.map((item) => item.etiqueta || item.fecha || 'Sin etiqueta');
+  const values = datosCrudos.map((item) => Number(item.valor) || 0);
+
+  return {
+    labels,
+    values
   };
 };
